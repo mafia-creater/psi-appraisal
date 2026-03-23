@@ -15,6 +15,9 @@ public interface AppraisalService {
     // Employee: view all their own appraisals
     List<AppraisalResponse> getMyAppraisals(Long employeeId);
 
+    // Manager: view all appraisals for their team
+    List<AppraisalResponse> getTeamAppraisals(Long managerId);
+
     // Any role: view one appraisal by ID (with ownership check)
     AppraisalResponse getAppraisalById(Long appraisalId, Long requesterId);
 

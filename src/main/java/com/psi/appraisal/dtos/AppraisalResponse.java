@@ -1,6 +1,5 @@
 package com.psi.appraisal.dtos;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,17 +21,23 @@ public class AppraisalResponse {
     private LocalDate cycleEndDate;
     private CycleStatus cycleStatus;
 
-    // Participants (just names + IDs — never expose password)
+    // Participants
     private Long employeeId;
     private String employeeName;
+    private String employeeJobTitle;
+    private String employeeDepartment;
     private Long managerId;
     private String managerName;
 
     // Self assessment
-    private String selfAssessment;
+    private String whatWentWell;
+    private String whatToImprove;
+    private String achievements;
     private Integer selfRating;
 
     // Manager review
+    private String managerStrengths;
+    private String managerImprovements;
     private String managerComments;
     private Integer managerRating;
 

@@ -41,6 +41,13 @@ public class AppraisalServiceImpl implements AppraisalService {
         User employee = findUserById(request.getEmployeeId());
         User manager = findUserById(request.getManagerId());
 
+        if (employee.getRole() != com.psi.appraisal.entity.enums.Role.EMPLOYEE) {
+            throw new RuntimeException("The assigned employee must have the EMPLOYEE role");
+        }
+        if (manager.getRole() != com.psi.appraisal.entity.enums.Role.MANAGER) {
+            throw new RuntimeException("The assigned manager must have the MANAGER role");
+        }
+
         Appraisal appraisal = Appraisal.builder()
                 .cycleName(request.getCycleName())
                 .cycleStartDate(request.getCycleStartDate())
@@ -66,6 +73,14 @@ public class AppraisalServiceImpl implements AppraisalService {
     @Override
     public List<AppraisalResponse> getMyAppraisals(Long employeeId) {
         return appraisalRepository.findByEmployeeId(employeeId)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppraisalResponse> getTeamAppraisals(Long managerId) {
+        return appraisalRepository.findByManagerId(managerId)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -101,7 +116,9 @@ public class AppraisalServiceImpl implements AppraisalService {
                     + appraisal.getAppraisalStatus());
         }
 
-        appraisal.setSelfAssessment(request.getSelfAssessment());
+        appraisal.setWhatWentWell(request.getWhatWentWell());
+        appraisal.setWhatToImprove(request.getWhatToImprove());
+        appraisal.setAchievements(request.getAchievements());
         appraisal.setSelfRating(request.getSelfRating());
         appraisal.setAppraisalStatus(AppraisalStatus.SELF_SUBMITTED);
         appraisal.setSubmittedAt(LocalDateTime.now());
@@ -134,6 +151,8 @@ public class AppraisalServiceImpl implements AppraisalService {
                     + appraisal.getAppraisalStatus());
         }
 
+        appraisal.setManagerStrengths(request.getManagerStrengths());
+        appraisal.setManagerImprovements(request.getManagerImprovements());
         appraisal.setManagerComments(request.getManagerComments());
         appraisal.setManagerRating(request.getManagerRating());
         appraisal.setAppraisalStatus(AppraisalStatus.MANAGER_REVIEWED);
@@ -214,10 +233,18 @@ public class AppraisalServiceImpl implements AppraisalService {
         response.setCycleStatus(appraisal.getCycleStatus());
         response.setEmployeeId(appraisal.getEmployee().getId());
         response.setEmployeeName(appraisal.getEmployee().getFullName());
+        response.setEmployeeJobTitle(appraisal.getEmployee().getJobTitle());
+        if (appraisal.getEmployee().getDepartment() != null) {
+            response.setEmployeeDepartment(appraisal.getEmployee().getDepartment().getName());
+        }
         response.setManagerId(appraisal.getManager().getId());
         response.setManagerName(appraisal.getManager().getFullName());
-        response.setSelfAssessment(appraisal.getSelfAssessment());
+        response.setWhatWentWell(appraisal.getWhatWentWell());
+        response.setWhatToImprove(appraisal.getWhatToImprove());
+        response.setAchievements(appraisal.getAchievements());
         response.setSelfRating(appraisal.getSelfRating());
+        response.setManagerStrengths(appraisal.getManagerStrengths());
+        response.setManagerImprovements(appraisal.getManagerImprovements());
         response.setManagerComments(appraisal.getManagerComments());
         response.setManagerRating(appraisal.getManagerRating());
         response.setAppraisalStatus(appraisal.getAppraisalStatus());

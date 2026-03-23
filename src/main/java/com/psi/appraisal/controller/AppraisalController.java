@@ -43,6 +43,16 @@ public class AppraisalController {
         List<AppraisalResponse> responses = appraisalService.getMyAppraisals(employeeId);
         return ResponseEntity.ok(ApiResponse.success(responses));
     }
+
+    // Manager: get all appraisals for their team
+    // GET /api/appraisals/team?managerId=1
+    @GetMapping("/team")
+    public ResponseEntity<ApiResponse<List<AppraisalResponse>>> getTeamAppraisals(
+            @RequestParam Long managerId) {
+
+        List<AppraisalResponse> responses = appraisalService.getTeamAppraisals(managerId);
+        return ResponseEntity.ok(ApiResponse.success(responses));
+    }
  
     // Any role: get one appraisal by ID
     // GET /api/appraisals/{id}?requesterId=1

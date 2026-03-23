@@ -11,7 +11,13 @@ import lombok.Setter;
 @Setter
 public class ManagerReviewRequest {
 
-    @NotBlank(message = "Manager comments cannot be empty")
+    @NotBlank(message = "Please describe the employee's strengths")
+    private String managerStrengths;
+
+    @NotBlank(message = "Please describe areas for improvement")
+    private String managerImprovements;
+
+    // Optional overall comments
     private String managerComments;
 
     @NotNull(message = "Manager rating is required")

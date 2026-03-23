@@ -5,6 +5,7 @@ import com.psi.appraisal.dtos.UpdateUserRequest;
 import com.psi.appraisal.dtos.UserResponse;
 import com.psi.appraisal.entity.Department;
 import com.psi.appraisal.entity.User;
+import com.psi.appraisal.entity.enums.Role;
 import com.psi.appraisal.exception.DuplicateResourceException;
 import com.psi.appraisal.exception.ResourceNotFoundException;
 import com.psi.appraisal.repository.DepartmentRepository;
@@ -32,6 +33,14 @@ public class UserServiceImpl implements UserService {
                     "User already exists with email: " + request.getEmail());
         }
 
+        // Role-based validation
+        if (request.getRole() == Role.EMPLOYEE && request.getManagerId() == null) {
+            throw new IllegalArgumentException("Employees must be assigned a manager");
+        }
+        if (request.getRole() == Role.HR && request.getManagerId() != null) {
+            throw new IllegalArgumentException("HR users cannot have a manager assigned");
+        }
+
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
@@ -50,6 +59,9 @@ public class UserServiceImpl implements UserService {
         if (request.getManagerId() != null) {
             User manager = userRepository.findById(request.getManagerId())
                     .orElseThrow(() -> new ResourceNotFoundException("Manager", request.getManagerId()));
+            if (manager.getRole() != Role.MANAGER) {
+                throw new IllegalArgumentException("Assigned manager must have the MANAGER role");
+            }
             user.setManager(manager);
         }
 

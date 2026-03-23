@@ -15,7 +15,8 @@ public interface AppraisalRepository extends JpaRepository<Appraisal, Long> {
     @Query("""
             select a
             from Appraisal a
-            join fetch a.employee
+            join fetch a.employee e
+            left join fetch e.department
             join fetch a.manager
             where a.id = :id
             """)
@@ -24,7 +25,8 @@ public interface AppraisalRepository extends JpaRepository<Appraisal, Long> {
     @Query("""
             select a
             from Appraisal a
-            join fetch a.employee
+            join fetch a.employee e
+            left join fetch e.department
             join fetch a.manager
             where a.employee.id = :employeeId
             """)
@@ -33,7 +35,8 @@ public interface AppraisalRepository extends JpaRepository<Appraisal, Long> {
     @Query("""
             select a
             from Appraisal a
-            join fetch a.employee
+            join fetch a.employee e
+            left join fetch e.department
             join fetch a.manager
             where a.manager.id = :managerId
             """)

@@ -27,7 +27,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "appraisals", uniqueConstraints = @UniqueConstraint(name = "uq_cycle_employee", columnNames = {
-		"cycles_name", "employee_id" }))
+		"cycle_name", "employee_id" }))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -62,15 +62,29 @@ public class Appraisal {
 	private User manager;
 	
 	
-	@Column(name = "self_assessment", columnDefinition = "TEXT")
-	private String selfAssessment;
-	
+	// Self assessment fields
+	@Column(name = "what_went_well", columnDefinition = "TEXT")
+	private String whatWentWell;
+
+	@Column(name = "what_to_improve", columnDefinition = "TEXT")
+	private String whatToImprove;
+
+	@Column(name = "achievements", columnDefinition = "TEXT")
+	private String achievements;
+
 	@Column(name = "self_rating")
 	private Integer selfRating;
-	
+
+	// Manager review fields
+	@Column(name = "manager_strengths", columnDefinition = "TEXT")
+	private String managerStrengths;
+
+	@Column(name = "manager_improvements", columnDefinition = "TEXT")
+	private String managerImprovements;
+
 	@Column(name = "manager_comments", columnDefinition = "TEXT")
 	private String managerComments;
-	
+
 	@Column(name = "manager_rating")
 	private Integer managerRating;
 	
